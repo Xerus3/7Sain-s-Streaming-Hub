@@ -10,9 +10,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const TMDB_KEY = "PUT_YOUR_TMDB_KEY_HERE";
+const TMDB_KEY = "593f936ea6ac7068502a786d74859854";
 const BASE = "https://api.themoviedb.org/3";
-const JWT_SECRET = "YOUR_SECRET_KEY";
+const JWT_SECRET = eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1OTNmOTM2ZWE2YWM3MDY4NTAyYTc4NmQ3NDg1OTg1NCIsIm5iZiI6MTczMTMzMTU4Mi44MTMsInN1YiI6IjY3MzIwNWZlNjE2MjZhYzEwNmJlNzJjMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.hgVwkcWxSn9jSmUcTvYMp6a3jPXrkvv5v_W0ONR2nmk";
 
 // SQLite database setup
 const dbPromise = open({ filename: './database.sqlite', driver: sqlite3.Database });
