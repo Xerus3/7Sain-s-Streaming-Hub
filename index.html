@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NetStream Frontend</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>NetStream</h1>
+    <div class="controls">
+      <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search movies or TV shows">
+        <div id="suggestions" class="suggestions"></div>
+      </div>
+      <select id="sortSelect">
+        <option value="popularity.desc">Popularity</option>
+        <option value="release_date.desc">Release Date</option>
+        <option value="vote_average.desc">Rating</option>
+      </select>
+      <select id="typeSelect">
+        <option value="">All Types</option>
+        <option value="movie">Movies</option>
+        <option value="tv">TV Shows</option>
+      </select>
+      <select id="ageSelect">
+        <option value="">All Ages</option>
+        <option value="0">G</option>
+        <option value="13">PG-13</option>
+        <option value="16">16+</option>
+        <option value="18">18+</option>
+      </select>
+      <select id="genreSelect">
+        <option value="">All Genres</option>
+      </select>
+    </div>
+  </header>
+
+  <main>
+    <section id="trendingSection">
+      <h2>Trending</h2>
+      <div id="trendingList" class="movies-grid"></div>
+    </section>
+
+    <section id="searchSection" style="display:none;">
+      <h2>Search Results</h2>
+      <div id="searchResults" class="movies-grid"></div>
+    </section>
+
+    <section id="playerSection" style="display:none;">
+      <div id="playerWrapper">
+        <img id="playerPlaceholder" class="player-placeholder" src="">
+        <div class="video-container" id="playerContainer"></div>
+      </div>
+      <div id="infoContainer"></div>
+      <button id="backBtn">Back</button>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
