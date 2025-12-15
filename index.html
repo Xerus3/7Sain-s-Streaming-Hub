@@ -50,8 +50,10 @@
 
     <section id="playerSection" style="display:none;">
       <div id="playerWrapper">
-        <img id="playerPlaceholder" class="player-placeholder" src="">
-        <div class="video-container" id="playerContainer"></div>
+        <div class="video-container">
+          <iframe id="vidPlayer" src="" allowfullscreen allow="encrypted-media"></iframe>
+          <img id="playerPlaceholder" class="player-overlay" src="">
+        </div>
       </div>
       <div id="infoContainer"></div>
       <button id="backBtn">Back</button>
