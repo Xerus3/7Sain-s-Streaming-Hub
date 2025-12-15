@@ -100,69 +100,86 @@ header input, select {
   margin: 0 auto 20px;
 }
 
-.player-placeholder {
-  width: 100%;
-  aspect-ratio: 4/3;
-  object-fit: cover;
-  filter: blur(3px);
-  background: black;
-}
-
 .video-container {
   position: relative;
   width: 100%;
   padding-bottom: 75%; /* 4:3 ratio */
-  display: none;
+  display: block;
 }
 
 .video-container iframe {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border: none;
-  border-radius: 6px;
+  top:0; left:0; width:100%; height:100%;
+  border:0;
+  border-radius:6px;
+  z-index:1;
+}
+
+.player-overlay {
+  position: absolute;
+  top:0; left:0; width:100%; height:100%;
+  object-fit: cover;
+  filter: blur(3px);
+  transition: opacity 0.5s ease;
+  z-index:2;
 }
 
 /* Info Section */
 #infoContainer {
-  padding: 20px;
-  background: #1a1a1a;
-  border-radius: 6px;
-  max-width: 640px;
-  margin: 0 auto;
+  padding: 30px;
+  background: rgba(0,0,0,0.7);
+  border-radius: 8px;
+  max-width: 900px;
+  margin: 0 auto 40px;
+  color: #fff;
   position: relative;
 }
-
 #infoContainer::before {
-  content: "";
-  position: absolute;
+  content:"";
+  position:absolute;
   top:0; left:0; width:100%; height:100%;
   background-size: cover;
   background-position: center;
-  opacity: 0.1;
-  border-radius: 6px;
+  filter: blur(15px) brightness(0.3);
   z-index:0;
+  border-radius: 8px;
 }
-
 #infoContainer > * {
   position: relative;
   z-index:1;
 }
+#infoContainer h1 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+#infoContainer p {
+  font-size: 1rem;
+  margin-bottom: 8px;
+}
 
+/* Cast Grid */
 .cast-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
-  margin-top: 10px;
+  gap: 10px;
+  margin-top: 15px;
 }
 
-.cast-grid img {
-  width: 60px;
-  height: 60px;
+.cast-member {
+  width: 80px;
+  text-align: center;
+}
+
+.cast-member img {
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
   object-fit: cover;
+}
+
+.cast-member p {
+  font-size: 12px;
+  margin-top: 4px;
 }
 
 /* Back Button */
@@ -180,10 +197,6 @@ header input, select {
 
 #backBtn:hover {
   background: #b0060f;
-}
-
-h2 {
-  padding-left: 10px;
 }
 
 /* Animations */
