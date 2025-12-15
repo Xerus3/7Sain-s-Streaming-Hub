@@ -10,11 +10,15 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const TMDB_KEY = "593f936ea6ac7068502a786d74859854";
+// ---------------- CONFIG ----------------
+// Keep your TMDb API Key
+const TMDB_KEY = "593f936ea6ac7068502a786d74859854";  
 const BASE = "https://api.themoviedb.org/3";
-const JWT_SECRET = eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1OTNmOTM2ZWE2YWM3MDY4NTAyYTc4NmQ3NDg1OTg1NCIsIm5iZiI6MTczMTMzMTU4Mi44MTMsInN1YiI6IjY3MzIwNWZlNjE2MjZhYzEwNmJlNzJjMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.hgVwkcWxSn9jSmUcTvYMp6a3jPXrkvv5v_W0ONR2nmk";
 
-// SQLite database setup
+// Random JWT secret (32 bytes hex string)
+const JWT_SECRET = process.env.JWT_SECRET || "f1d3ff8443297732862df21dc4e57262c9e2b5f1e68b9c924e3c3c3f2e4b2e1a";
+
+// ---------------- DATABASE ----------------
 const dbPromise = open({ filename: './database.sqlite', driver: sqlite3.Database });
 (async () => {
   const db = await dbPromise;
@@ -46,7 +50,7 @@ app.get("/api/videos/:type/:id", async (req, res) => {
   res.json(await r.json());
 });
 
-// ---------------- Auth Endpoints ----------------
+// ---------------- AUTH ----------------
 app.post("/api/auth/signup", async (req, res) => {
   const { username, email, password } = req.body;
   const db = await dbPromise;
@@ -72,7 +76,7 @@ app.post("/api/auth/login", async (req, res) => {
   res.json({ token, user: { id: user.id, username: user.username } });
 });
 
-// ---------------- Watchlist Endpoints ----------------
+// ---------------- WATCHLIST ----------------
 const authMiddleware = (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) return res.status(401).json({ error: "Unauthorized" });
@@ -93,9 +97,11 @@ app.post("/api/watchlist", authMiddleware, async (req, res) => {
   res.json({ success: true });
 });
 
-// ---------------- Generic Video Provider ----------------
+// ---------------- VIDEO PLACEHOLDER ----------------
 app.get("/api/play/:type/:id/:season?/:episode?", async (req, res) => {
   res.json({ mode: "none" });
 });
 
-app.listen(3000, () => console.log("Backend running on http://localhost:3000"));
+// ---------------- START SERVER ----------------
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Backend running on http://localhost:${PORT}`));
