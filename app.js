@@ -169,45 +169,56 @@ async function displayEpisodes(tvId, seasonNum){
 }
 
 // ---------------- VidFast / Placeholder Player ----------------
-function playVidFast(id,type="movie",season=1,episode=1){
+async function playVidFast(id,type="movie",season=1,episode=1){
   let url="";
   if(type==="movie") url=`https://vidfast.pro/movie/${id}?autoPlay=true`;
   else url=`https://vidfast.pro/tv/${id}/${season}/${episode}?autoPlay=true`;
 
   // Placeholder image before loading
-  fetch(`${BASE}/${type==='movie'?'movie':'tv'}/${id}?api_key=${TMDB_KEY}`)
-    .then(res=>res.json())
-    .then(data=>{
-      const poster = data.poster_path?`https://image.tmdb.org/t/p/w500${data.poster_path}`:"";
-      const backdrop = data.backdrop_path?`https://image.tmdb.org/t/p/original${data.backdrop_path}`:"";
-      playerPlaceholder.src=`https://wsrv.nl/?url=${poster}&bg=black&blur=3&tint=black`;
-      setInfo(data,type,backdrop);
-    });
-
-  // Show video container after placeholder
+  const res = await fetch(`${BASE}/${type==='movie'?'movie':'tv'}/${id}?api_key=${TMDB_KEY}`);
+  const data = await res.json();
+  const poster = data.poster_path?`https://image.tmdb.org/t/p/w500${data.poster_path}`:"";
+  const backdrop = data.backdrop_path?`https://image.tmdb.org/t/p/original${data.backdrop_path}`:"";
+  playerPlaceholder.src=`https://wsrv.nl/?url=${poster}&bg=black&blur=3&tint=black`;
+  
   playerContainer.style.display="block";
-  playerContainer.innerHTML=`<iframe src="${url}" allowfullscreen allow="encrypted-media"></iframe>`;
+  const vidPlayer = document.getElementById("vidPlayer");
+  vidPlayer.src = url;
+  playerPlaceholder.style.opacity = 1;
+  vidPlayer.onload = () => {
+    playerPlaceholder.style.opacity = 0;
+  };
+  
+  setInfo(data,type,backdrop);
   trendingSection.style.display="none";
   searchSection.style.display="none";
   playerSection.style.display="block";
 }
 
 // ---------------- Info Section ----------------
-function setInfo(data,type,backdrop=""){
-  infoContainer.innerHTML="";
-  infoContainer.style.backgroundImage=`url(${backdrop})`;
-  let html=`<h2>${data.title||data.name}</h2>`;
-  if(data.overview) html+=`<p>${data.overview}</p>`;
-  if(data.vote_average) html+=`<p>Rating: ${data.vote_average}</p>`;
-  if(type==='movie' && data.release_date) html+=`<p>Release: ${data.release_date}</p>`;
-  if(type==='tv' && data.first_air_date) html+=`<p>First Air: ${data.first_air_date}</p>`;
+async function fetchCast(id,type){
+  const res = await fetch(`${BASE}/${type}/${id}/credits?api_key=${TMDB_KEY}`);
+  const data = await res.json();
+  return data.cast.slice(0,6);
+}
 
-  // Cast placeholders
-  html+=`<div class="cast-grid">`;
-  for(let i=0;i<6;i++){
-    html+=`<img src="https://via.placeholder.com/60x60?text=Cast" alt="Cast">`;
-  }
-  html+=`</div>`;
+async function setInfo(data,type,backdrop=""){
+  infoContainer.innerHTML="";
+  infoContainer.style.backgroundImage = backdrop ? `url(${backdrop})` : "";
+  let html = `<h1>${data.title||data.name}</h1>`;
+  html += `<p>${data.overview}</p>`;
+  html += `<p>Rating: ${data.vote_average || "N/A"}</p>`;
+  html += `<p>${type==='movie'?'Release':'First Air'}: ${data.release_date||data.first_air_date||"N/A"}</p>`;
+
+  const cast = await fetchCast(data.id,type);
+  html += `<div class="cast-grid">`;
+  cast.forEach(member=>{
+    const img = member.profile_path
+      ? `https://image.tmdb.org/t/p/w185${member.profile_path}`
+      : "https://via.placeholder.com/60x60?text=No+Photo";
+    html += `<div class="cast-member"><img src="${img}" alt="${member.name}"><p>${member.name}</p></div>`;
+  });
+  html += `</div>`;
   infoContainer.innerHTML=html;
 }
 
